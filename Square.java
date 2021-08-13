@@ -1,4 +1,4 @@
-import java.awt.*;
+  import java.awt.*;
 import java.awt.geom.*;
 public class Square
 {
@@ -55,8 +55,9 @@ public class Square
         Rectangle2D.Double myRect = new Rectangle2D.Double(this.x, this.y, this.Width_Height, this.Width_Height);
         g2.setColor(new Color(0,0,0));
         g2.draw(myRect);
+        Rectangle2D.Double myRect1 = new Rectangle2D.Double(this.x+1, this.y+1, this.Width_Height-2, this.Width_Height-2);
         g2.setColor(new Color(255,255,255));
-        g2.fill(myRect);
+        g2.fill(myRect1);
 
         if (selected)
         {

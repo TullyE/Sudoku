@@ -6,14 +6,14 @@ import java.awt.Color;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+// import java.util.ArrayList;
+// import java.util.Collections;
+// import java.util.HashMap;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
+// import java.awt.image.BufferedImage;
+// import java.io.File;
+// import java.io.IOException;
+// import javax.imageio.ImageIO;
 /**
 HomepageMenu.java
 has the graphics code for the Homepage
@@ -23,8 +23,8 @@ Tully Eva
 
 public class GameLogic extends JPanel implements MouseListener, KeyListener
 {
-    private HashMap<Integer, Integer[]> test1 = new HashMap<>();
-    private ArrayList<String> test2 = new ArrayList<>();
+    // private HashMap<Integer, Integer[]> test1 = new HashMap<>();
+    // private ArrayList<String> test2 = new ArrayList<>();
     private int positionSelectedRow = -1;
     private int positionSelectedCol = -1;
     private String numbers = "123456789";
@@ -37,6 +37,16 @@ public class GameLogic extends JPanel implements MouseListener, KeyListener
                                           {"", "6", "", "", "", "", "2", "8", ""},
                                           {"", "", "", "4", "1", "9", "", "", "5"},
                                           {"", "", "", "", "8", "", "", "7", "9"}};
+    // private String[][] boardData1 = new String[][]{{"0", "1", "2", "3", "4", "5", "6", "7", "8"},
+    //                                       {"9", "10", "11", "12", "13", "14", "15", "16", "17"},
+    //                                       {"18", "19", "20", "21", "22", "23", "24", "25", "26"},
+    //                                       {"27", "28", "29", "30", "31", "32", "33", "34", "35"},
+    //                                       {"36", "37", "38", "39", "40", "41", "42", "43", "44"},
+    //                                       {"45", "46", "47", "48", "49", "50", "51", "52", "53"},
+    //                                       {"54", "55", "56", "57", "58", "59", "60", "61", "62"},
+    //                                       {"63", "64", "65", "66", "67", "68", "69", "70", "71"},
+    //                                       {"72", "73", "74", "75", "76", "77", "78", "79", "80"}};
+
     private Square[][] boardPicture = new Square[9][9];
     /**
      * Default constructor for HomepageMenu
@@ -80,11 +90,6 @@ public class GameLogic extends JPanel implements MouseListener, KeyListener
         }
     }
 
-    public boolean checkBoard()
-    {
-        return true;
-    }
-
     public void initiateBoard()
     {
         int SquareSize = 50;
@@ -115,6 +120,81 @@ public class GameLogic extends JPanel implements MouseListener, KeyListener
         }
     }
 
+    public boolean checkSpot(int positionx, int positiony)
+    {
+        boolean returnValue = true;
+        String currentNum = boardPicture[positiony][positionx].getNumber();
+        if(currentNum.equals(""))
+        {
+            return true;
+        }
+        for(int y = 0; y < 9; y +=1) //x changes so moving accross a row
+        {
+            if(boardPicture[y][positionx].getNumber().equals(currentNum) && positiony != y)
+            {
+                boardPicture[y][positionx].setSelected(true);
+                System.out.println("false");
+                returnValue = false;
+            }
+            continue;
+        }
+
+        for(int x = 0; x < 9; x +=1) //x changes so moving accross a row
+        {
+            if(boardPicture[positiony][x].getNumber().equals(currentNum) && positionx != x)
+            {
+                boardPicture[positiony][x].setSelected(true);
+                System.out.println("false");
+                returnValue = false;
+            }
+            continue;
+        }
+
+        int topx = -1;
+        int topy = -1;
+        if(positionx >= 6)
+        {
+            topx = 6;
+        }
+        else if(positionx >= 3)
+        {
+            topx = 3;
+        }
+        else if(positionx >=0)
+        {
+            topx = 0;
+        }
+
+        if(positiony >= 6)
+        {
+            topy = 6;
+        }
+        else if(positiony >= 3)
+        {
+            topy = 3;
+        }
+        else if(positiony >=0)
+        {
+            topy = 0;
+        }
+
+        // System.out.println(topx + "" + topy);
+        for(int x = topx; x < topx + 3; x += 1)
+        {
+            for(int y = topy; y < topy + 3; y += 1)
+            {
+                
+                if(boardPicture[y][x].getNumber().equals(currentNum) && positionx != x && positiony != y)
+                {
+                    boardPicture[y][x].setSelected(true);
+                    System.out.println("false");
+                    returnValue = false;
+                }
+                continue;
+            }
+        }
+        return returnValue;
+    }
     public void clearAllSelections()
     {
         for(int row = 1; row < boardData.length + 1; row += 1)
@@ -125,32 +205,37 @@ public class GameLogic extends JPanel implements MouseListener, KeyListener
             }
         }
     }
-    @Override
-    public void keyTyped(KeyEvent e) {
-        // TODO Auto-generated method stub
+
+    public void keyTyped(KeyEvent e)
+    {
         
     }
-    @Override
+
     public void keyPressed(KeyEvent e) 
     {
         if(positionSelectedCol != -1 && positionSelectedRow != -1)
         {
             if(numbers.indexOf(KeyEvent.getKeyText(e.getKeyCode())) != -1)
-            boardPicture[positionSelectedRow][positionSelectedCol].setNumber(KeyEvent.getKeyText(e.getKeyCode()));
-            repaint();
+            {
+                clearAllSelections();
+                boardPicture[positionSelectedRow][positionSelectedCol].setSelected(true);
+                boardPicture[positionSelectedRow][positionSelectedCol].setNumber(KeyEvent.getKeyText(e.getKeyCode()));
+                repaint();
+            }
         }
     }
     @Override
     public void keyReleased(KeyEvent e) {
-        // TODO Auto-generated method stub
+        checkSpot(positionSelectedCol, positionSelectedRow);
+        repaint();
         
     }
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        // TODO Auto-generated method stub
-        
+
+    public void mouseClicked(MouseEvent e)
+    {
+
     }
-    @Override
+
     public void mousePressed(MouseEvent e)
     {
         for(int row = 1; row < boardData.length + 1; row += 1)
@@ -168,21 +253,20 @@ public class GameLogic extends JPanel implements MouseListener, KeyListener
                 }
             }
         }
-        System.out.println(e.getX());
     }
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        // TODO Auto-generated method stub
-        
+
+    public void mouseReleased(MouseEvent e)
+    {
+
     }
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        // TODO Auto-generated method stub
-        
+
+    public void mouseEntered(MouseEvent e)
+    {
+
     }
-    @Override
-    public void mouseExited(MouseEvent e) {
-        // TODO Auto-generated method stub
-        
+
+    public void mouseExited(MouseEvent e)
+    {
+  
    }
 }
