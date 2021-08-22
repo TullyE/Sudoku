@@ -5,17 +5,17 @@ public class Square
     private int x;
     private int y;
     private int Width_Height;
-    private String number;
+    private int number;
     private boolean selected;
     private boolean isStarter;
-    public Square(int Width_Height, int x, int y, String number)
+    public Square(int Width_Height, int x, int y, int number)
     {
         this.x = x;
         this.y = y; 
         this.Width_Height = Width_Height;
         this.number = number;
         this.selected = false;
-        if(number.equals(""))
+        if(number == 0)
         {
             this.isStarter = false;
         }
@@ -25,12 +25,17 @@ public class Square
         }
     }
 
-    public void setNumber(String number)
+    public void clear()
+    {
+        this.number = 0;
+    }
+
+    public void setNumber(int number)
     {
         this.number = number;
     }
 
-    public String getNumber()
+    public int getNumber()
     {
         return this.number;
     }
@@ -66,7 +71,7 @@ public class Square
             g2.draw(highlightedRect);
             g2.fill(highlightedRect);
         }
-        if (this.number != "")
+        if (this.number != 0)
         {
             g2.setFont(new Font("Monospaced", Font.BOLD, this.Width_Height/2));
             if(this.isStarter)
@@ -88,7 +93,7 @@ public class Square
                 }
             }
 
-            g2.drawString(this.number, this.x + (this.Width_Height/2) - this.Width_Height/6, this.y + (this.Width_Height/2)+this.Width_Height/5);    
+            g2.drawString(String.valueOf(this.number), this.x + (this.Width_Height/2) - this.Width_Height/6, this.y + (this.Width_Height/2)+this.Width_Height/5);    
         }
     }
 
@@ -106,5 +111,10 @@ public class Square
           }
        }
        return false;
+    }
+
+    public boolean isStarter()
+    {
+        return this.isStarter;
     }
 }
